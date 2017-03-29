@@ -7,10 +7,10 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
     /// <summary>
     /// 服务注册描述信息
     /// </summary>
-    public struct ServiceRegisteDescriptor
+    public class ServiceRegisteDescriptor
     {
-        public Type ServiceType { get; }
-        public ServiceLifetime LifeTime { get; }
+        public Type ServiceType { get; set; }
+        public ServiceLifetime LifeTime { get; set; }
         public bool AllowMultipleImp { get; set; }
         public Type Imp { get; set; }
         public Type[] GenericParameterTypes { get; set; }
