@@ -23,5 +23,10 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
         {
 
         }
+
+        public int Order
+        {
+            get { return 0; }
+        }
     }
 }

@@ -14,7 +14,9 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
         public ServiceRegisteDescriptorCollectionProvider(
            IEnumerable<IServiceRegisteDescriptorProvider> serviceRegisteDescriptorProviders)
         {
-            _serviceRegisteDescriptorProviders = serviceRegisteDescriptorProviders.ToArray();
+            _serviceRegisteDescriptorProviders = serviceRegisteDescriptorProviders
+                .OrderBy(p => p.Order)
+                .ToArray();
         }
 
         private void UpdateCollection()

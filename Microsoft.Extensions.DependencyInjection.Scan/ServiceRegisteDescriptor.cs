@@ -13,6 +13,6 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
         public ServiceLifetime LifeTime { get; }
         public bool AllowMultipleImp { get; set; }
         public Type Imp { get; set; }
-        public Type GenericType { get; set; }
+        public Type[] GenericParameterTypes { get; set; }
     }
 }

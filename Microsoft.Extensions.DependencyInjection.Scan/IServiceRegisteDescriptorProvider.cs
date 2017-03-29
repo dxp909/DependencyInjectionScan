@@ -9,6 +9,10 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
     /// </summary>
     public interface IServiceRegisteDescriptorProvider
     {
+        /// <summary>
+        /// 排序号，建议自定义的Provider，order从1开始，系统默认提供的Provider是0
+        /// </summary>
+        int Order { get; }
         void OnProvidersExecuting(ServiceRegisteDescriptorProviderContext context);
         void OnProvidersExecuted(ServiceRegisteDescriptorProviderContext context);
     }

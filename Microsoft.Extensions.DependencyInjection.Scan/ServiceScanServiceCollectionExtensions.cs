@@ -38,7 +38,7 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
             ServiceRegisteDescriptorCollection collection = provider.ServiceRegisteDescriptors;
             foreach (var item in collection.Items)
             {
-                ServiceRegister.Registe(item);
+                ServiceRegister.Registe(services,item);
             }
 
             return services;
