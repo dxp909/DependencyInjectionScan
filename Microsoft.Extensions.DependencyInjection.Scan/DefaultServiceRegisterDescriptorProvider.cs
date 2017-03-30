@@ -50,6 +50,10 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
                         }
                     }
                 }
+                else if (attr.Imp!=null)
+                {
+                    impTypes = new Type[1] { attr.Imp };
+                }
                 else
                 {
                     impTypes = new Type[1] { type };
