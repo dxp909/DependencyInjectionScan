@@ -19,13 +19,13 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
         public void OnProvidersExecuting(ServiceRegisteDescriptorProviderContext context)
         {
             Assembly[] assemblys = AssemblyDiscovery.Discovery();
-            IEnumerable<Type> types = assemblys.SelectMany(m => m.GetTypes().Where(t => t.GetTypeInfo().GetCustomAttributes().Any(a => a.GetType() == typeof(ServiceRegisteDescriptorAttribute))));
+            IEnumerable<Type> types = assemblys.SelectMany(m => m.GetTypes().Where(t => t.GetTypeInfo().GetCustomAttributes().Any(a => a.GetType() == typeof(ServiceRegisteDescriptorAttribute)))).ToList();
             foreach (var type in types)
             {
                 TypeInfo typeInfo = type.GetTypeInfo();
                 ServiceRegisteDescriptorAttribute attr = type.GetTypeInfo().GetCustomAttributes().FirstOrDefault(m => m.GetType() == typeof(ServiceRegisteDescriptorAttribute)) as ServiceRegisteDescriptorAttribute;
 
-                if (typeInfo.IsGenericType && !typeInfo.ContainsGenericParameters && attr.GenericType == null)
+                if (typeInfo.IsGenericTypeDefinition && attr.GenericType == null)
                 {
                     throw new NotSupportedException(nameof(attr));
                 }
@@ -34,15 +34,21 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
                 if ((typeInfo.IsInterface || typeInfo.IsAbstract) && attr.Imp == null)
                 {
                     //从程序集中获取所有实现了该服务端类
-                    if (typeInfo.IsInterface)
+                    if (typeInfo.IsGenericTypeDefinition && typeInfo.IsInterface)
                     {
-                        impTypes = assemblys.SelectMany(m => m.GetTypes().Where(t => t.GetTypeInfo().IsClass && !t.GetTypeInfo().IsAbstract && t.GetTypeInfo().ImplementedInterfaces.Any(i => i == type))).ToArray();
+                        impTypes = assemblys.SelectMany(m => m.GetTypes().Where(t => t.GetTypeInfo().IsClass && !t.GetTypeInfo().IsAbstract && t.GetTypeInfo().GetInterfaces().Any(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == type))).ToArray();
                     }
                     else
                     {
-                        impTypes = assemblys.SelectMany(m => m.GetTypes().Where(t => t.GetTypeInfo().IsClass && !t.GetTypeInfo().IsAbstract && t.GetTypeInfo().IsSubclassOf(type))).ToArray();
+                        if (typeInfo.IsInterface)
+                        {
+                            impTypes = assemblys.SelectMany(m => m.GetTypes().Where(t => t.GetTypeInfo().IsClass && !t.GetTypeInfo().IsAbstract && t.GetTypeInfo().GetInterfaces().Any(i => i == type))).ToArray();
+                        }
+                        else
+                        {
+                            impTypes = assemblys.SelectMany(m => m.GetTypes().Where(t => t.GetTypeInfo().IsClass && !t.GetTypeInfo().IsAbstract && t.GetTypeInfo().IsSubclassOf(type))).ToArray();
+                        }
                     }
-                    
                 }
                 else
                 {
@@ -59,7 +65,7 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
                         LifeTime = attr.LifeTime
                     };
 
-                    if (typeInfo.IsGenericType && !typeInfo.ContainsGenericParameters)
+                    if (typeInfo.IsGenericType)
                     {
                         d.GenericParameterTypes = assemblys.SelectMany(m => m.GetTypes().Where(t => !t.GetTypeInfo().IsAbstract && (t.GetTypeInfo().IsSubclassOf(attr.GenericType) || t == attr.GenericType))).ToArray();
                     }

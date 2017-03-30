@@ -19,6 +19,11 @@ namespace test
         }
     }
 
+    public class ServiceTest1:ServiceTest
+    {
+
+    }
+
     [ServiceRegisteDescriptor(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient,AllowMultipleImp =true)]
     public abstract class AbstractTest
     {
@@ -47,5 +52,16 @@ namespace test
         {
             System.Console.WriteLine("AbImpTest2");
         }
+    }
+
+    [ServiceRegisteDescriptor(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped,AllowMultipleImp =true,GenericType =typeof(AbstractImpTest))]
+    public interface IGenericTest<T>
+    {
+        
+    }
+
+    public class GenericTest<T>:IGenericTest<T>
+    {
+
     }
 }

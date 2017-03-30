@@ -25,6 +25,10 @@ namespace test
                 item.M();
             }
 
+            IGenericTest<AbstractImpTest> t2 = hostingServiceProvider.GetService<IGenericTest<AbstractImpTest>>();
+
+            
+
             Console.WriteLine("Hello World!");
         }
     }
