@@ -34,7 +34,15 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
                 if ((typeInfo.IsInterface || typeInfo.IsAbstract) && attr.Imp == null)
                 {
                     //从程序集中获取所有实现了该服务端类
-                    impTypes = assemblys.SelectMany(m => m.GetTypes().Where(t => t.GetTypeInfo().BaseType == type)).ToArray();
+                    if (typeInfo.IsInterface)
+                    {
+                        impTypes = assemblys.SelectMany(m => m.GetTypes().Where(t => t.GetTypeInfo().IsClass && !t.GetTypeInfo().IsAbstract && t.GetTypeInfo().ImplementedInterfaces.Any(i => i == type))).ToArray();
+                    }
+                    else
+                    {
+                        impTypes = assemblys.SelectMany(m => m.GetTypes().Where(t => t.GetTypeInfo().IsClass && !t.GetTypeInfo().IsAbstract && t.GetTypeInfo().IsSubclassOf(type))).ToArray();
+                    }
+                    
                 }
                 else
                 {
@@ -53,7 +61,7 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
 
                     if (typeInfo.IsGenericType && !typeInfo.ContainsGenericParameters)
                     {
-                        d.GenericParameterTypes = assemblys.SelectMany(m => m.GetTypes().Where(t => !t.GetTypeInfo().IsAbstract && (t.GetTypeInfo().BaseType == attr.GenericType || t == attr.GenericType))).ToArray();
+                        d.GenericParameterTypes = assemblys.SelectMany(m => m.GetTypes().Where(t => !t.GetTypeInfo().IsAbstract && (t.GetTypeInfo().IsSubclassOf(attr.GenericType) || t == attr.GenericType))).ToArray();
                     }
                     context.Results.Add(d);
                 }

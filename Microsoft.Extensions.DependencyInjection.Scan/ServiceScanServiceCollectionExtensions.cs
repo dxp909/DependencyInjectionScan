@@ -10,12 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
 {
     public static class ServiceScanServiceCollectionExtensions
     {
-        private static void AddScanCore(IServiceCollection services)
-        {
-            services.TryAddEnumerable(ServiceDescriptor.Transient<IServiceRegisteDescriptorProvider, DefaultServiceRegisterDescriptorProvider>());
-            services.TryAddTransient<IServiceRegisteDescriptorCollectionProvider, ServiceRegisteDescriptorCollectionProvider>();
-            
-        }
+       
         public static IServiceCollection AddScanServices(this IServiceCollection services)
         {
             return AddScanServices(services,null);
@@ -23,18 +18,11 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
 
         public static IServiceCollection AddScanServices(this IServiceCollection services,Action<ServiceScanOptions> options)
         {
-            AddScanCore(services);
-            if (options!=null)
-            {
-                ServiceScanOptions option = new ServiceScanOptions();
-                options(option);
-                foreach (var item in option.DescriptorProviderTypes)
-                {
-                    services.TryAddEnumerable(ServiceDescriptor.Transient(typeof(IServiceRegisteDescriptorProvider), item));
-                }
-            }
+            ServiceScanOptions option = new ServiceScanOptions();
+            option.DescriptorProviderTypes.Add(new DefaultServiceRegisterDescriptorProvider());
+            options?.Invoke(option);
 
-            IServiceRegisteDescriptorCollectionProvider provider = GetServiceFromCollection<IServiceRegisteDescriptorCollectionProvider>(services);
+            IServiceRegisteDescriptorCollectionProvider provider = new ServiceRegisteDescriptorCollectionProvider(option.DescriptorProviderTypes);
             ServiceRegisteDescriptorCollection collection = provider.ServiceRegisteDescriptors;
             foreach (var item in collection.Items)
             {
@@ -42,13 +30,6 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
             }
 
             return services;
-        }
-
-        private static T GetServiceFromCollection<T>(this IServiceCollection services)
-        {
-            return (T)services
-                .FirstOrDefault(d => d.ServiceType == typeof(T))
-                ?.ImplementationInstance;
         }
     }
 }
