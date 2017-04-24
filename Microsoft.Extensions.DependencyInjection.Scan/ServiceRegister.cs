@@ -37,7 +37,7 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
             }
            
         }
-        public static void Registe(IServiceCollection services,ServiceRegisteDescriptor descriptor)
+        public static void Registe(IServiceCollection services,ServiceRegisterDescriptor descriptor)
         {
             //判断是否是泛型接口
             if (descriptor.ServiceType.GetTypeInfo().IsGenericType)

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace test
 {
-    [ServiceRegisteDescriptor(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton)]
+    [ServiceRegisterDescriptor(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton)]
     public interface IServiceTest
     {
         void TestM();
@@ -24,7 +24,7 @@ namespace test
 
     }
 
-    [ServiceRegisteDescriptor(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient,AllowMultipleImp =true)]
+    [ServiceRegisterDescriptor(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient,AllowMultipleImp =true)]
     public abstract class AbstractTest
     {
         public abstract void M();
@@ -54,7 +54,7 @@ namespace test
         }
     }
 
-    [ServiceRegisteDescriptor(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped,AllowMultipleImp =true,GenericType =typeof(AbstractImpTest))]
+    [ServiceRegisterDescriptor(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped,AllowMultipleImp =true,GenericType =typeof(AbstractImpTest))]
     public interface IGenericTest<T>
     {
         

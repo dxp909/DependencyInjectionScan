@@ -7,23 +7,23 @@ using System.Text;
 namespace Microsoft.Extensions.DependencyInjection.Scan
 {
     
-    public class DefaultServiceRegisterDescriptorProvider : IServiceRegisteDescriptorProvider
+    public class DefaultServiceRegisterDescriptorProvider : IServiceRegisterDescriptorProvider
     {
-        public void OnProvidersExecuted(ServiceRegisteDescriptorProviderContext context)
+        public void OnProvidersExecuted(ServiceRegisterDescriptorProviderContext context)
         {
         }
         /// <summary>
         /// 使用反射从程序集中获取所有包含ServiceRegisteDescriptor特性的接口定义
         /// </summary>
         /// <param name="context"></param>
-        public void OnProvidersExecuting(ServiceRegisteDescriptorProviderContext context)
+        public void OnProvidersExecuting(ServiceRegisterDescriptorProviderContext context)
         {
             Assembly[] assemblys = AssemblyDiscovery.Discovery();
-            IEnumerable<Type> types = assemblys.SelectMany(m => m.GetTypes().Where(t => t.GetTypeInfo().GetCustomAttributes().Any(a => a.GetType() == typeof(ServiceRegisteDescriptorAttribute)))).ToList();
+            IEnumerable<Type> types = assemblys.SelectMany(m => m.GetTypes().Where(t => t.GetTypeInfo().GetCustomAttributes().Any(a => a.GetType() == typeof(ServiceRegisterDescriptorAttribute)))).ToList();
             foreach (var type in types)
             {
                 TypeInfo typeInfo = type.GetTypeInfo();
-                ServiceRegisteDescriptorAttribute attr = type.GetTypeInfo().GetCustomAttributes().FirstOrDefault(m => m.GetType() == typeof(ServiceRegisteDescriptorAttribute)) as ServiceRegisteDescriptorAttribute;
+                ServiceRegisterDescriptorAttribute attr = type.GetTypeInfo().GetCustomAttributes().FirstOrDefault(m => m.GetType() == typeof(ServiceRegisterDescriptorAttribute)) as ServiceRegisterDescriptorAttribute;
 
                 if (typeInfo.IsGenericTypeDefinition && attr.GenericType == null)
                 {
@@ -61,7 +61,7 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
 
                 foreach (var imp in impTypes)
                 {
-                    ServiceRegisteDescriptor d=new ServiceRegisteDescriptor
+                    ServiceRegisterDescriptor d=new ServiceRegisterDescriptor
                     {
                         AllowMultipleImp = attr.AllowMultipleImp,
                         Imp = imp,

@@ -22,8 +22,8 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
             option.DescriptorProviderTypes.Add(new DefaultServiceRegisterDescriptorProvider());
             options?.Invoke(option);
 
-            IServiceRegisteDescriptorCollectionProvider provider = new ServiceRegisteDescriptorCollectionProvider(option.DescriptorProviderTypes);
-            ServiceRegisteDescriptorCollection collection = provider.ServiceRegisteDescriptors;
+            IServiceRegisterDescriptorCollectionProvider provider = new ServiceRegisterDescriptorCollectionProvider(option.DescriptorProviderTypes);
+            ServiceRegisterDescriptorCollection collection = provider.ServiceRegisterDescriptors;
             foreach (var item in collection.Items)
             {
                 ServiceRegister.Registe(services,item);

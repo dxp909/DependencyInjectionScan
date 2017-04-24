@@ -6,6 +6,6 @@ namespace Microsoft.Extensions.DependencyInjection.Scan
 {
     public class ServiceScanOptions
     {
-        public IList<IServiceRegisteDescriptorProvider> DescriptorProviderTypes { get; } = new List<IServiceRegisteDescriptorProvider>();
+        public IList<IServiceRegisterDescriptorProvider> DescriptorProviderTypes { get; } = new List<IServiceRegisterDescriptorProvider>();
     }
 }
